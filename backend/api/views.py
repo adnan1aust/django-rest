@@ -1,17 +1,13 @@
 import json
+from django.forms.models import model_to_dict
 from django.http import JsonResponse
 
+from products.models import Product
+
 def api_home(request, *args, **kwargs):
-    print(request.GET) #url query params
-    body = request.body
+    model_data = Product.objects.all().order_by("?").first()
     data = {}
-    try:
-        data = json.loads(body)
-    except:
-        pass
-    print(data)
-    #data['headers'] = request.headers
-    data['params'] = dict(request.GET)
-    data['headers'] = dict(request.headers)
-    data['content_type'] = request.content_type
+    if model_data:
+        data = model_to_dict(model_data)
+        #json_string = josn.dumps(data)
     return JsonResponse(data)
