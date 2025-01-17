@@ -17,10 +17,19 @@ from products.serializers import ProductSerializer
         #json_string = josn.dumps(data)
     return JsonResponse(data) """
 
-@api_view(['GET'])
+""" @api_view(['GET'])
 def api_home(request, *args, **kwargs):
     instance = Product.objects.all().order_by("?").first()
     data = {}
     if instance:
         data = ProductSerializer(instance).data
-    return Response(data)
+    return Response(data) """
+
+@api_view(['POST'])
+def api_home(request, *args, **kwargs):
+    serializer = ProductSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        instance = serializer.save()
+        print(instance)
+        return Response(serializer.data)
+    return Response({"invalid": "required field missing"}, status=400)
